@@ -91,6 +91,24 @@ box.scrollTop=box.scrollHeight;
 
 }
 </script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js";
 
+  const firebaseConfig = {
+    apiKey: "AIzaSyDHuie3BYhnsG8XgXP_Dn3-fmqrOq0UhCA",
+    authDomain: "simple-chat-29379.firebaseapp.com",
+    databaseURL: "https://simple-chat-29379-default-rtdb.firebaseio.com",
+    projectId: "simple-chat-29379",
+    storageBucket: "simple-chat-29379.firebasestorage.app",
+    messagingSenderId: "110265526293",
+    appId: "1:110265526293:web:bd5796795b1beb1c32061c",
+    measurementId: "G-K802TNVSRJ"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
 </body>
 </html>
+
