@@ -27,47 +27,28 @@ body {
     flex: 1;
     padding: 15px;
     overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
 }
 
 .msg {
     padding: 10px;
     border-radius: 8px;
-    max-width: 70%;
-}
-
-.sent {
+    margin: 5px;
     background: #dcf8c6;
-    align-self: flex-end;
-}
-
-.received {
-    background: #ffffff;
-    align-self: flex-start;
+    width: fit-content;
 }
 
 .input-area {
     display: flex;
     padding: 10px;
-    background: #f0f0f0;
 }
 
 input {
     flex: 1;
     padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
 }
 
 button {
-    padding: 10px 15px;
-    margin-left: 5px;
-    border: none;
-    background: green;
-    color: white;
-    border-radius: 5px;
+    padding: 10px;
 }
 </style>
 
@@ -78,41 +59,37 @@ button {
 <div class="chat-container">
 
 <div class="chat-box" id="chatBox">
-    <div class="msg received">
-        Welcome! Type a message below.
-    </div>
+<div class="msg">Welcome! Type a message below.</div>
 </div>
 
 <div class="input-area">
-    <input type="text" id="msgInput" placeholder="Type message...">
-    <button onclick="sendMsg()">➤</button>
+<input type="text" id="msgInput" placeholder="Type message...">
+<button onclick="sendMsg()">➤</button>
 </div>
 
 </div>
-
 
 <script>
-
 function sendMsg(){
 
-    let input = document.getElementById("msgInput");
-    let text = input.value;
+let input = document.getElementById("msgInput");
+let text = input.value;
 
-    if(text=="") return;
+if(text=="") return;
 
-    let box = document.getElementById("chatBox");
+let box = document.getElementById("chatBox");
 
-    let msg = document.createElement("div");
-    msg.className = "msg sent";
-    msg.innerHTML = text;
+let msg = document.createElement("div");
+msg.className="msg";
+msg.innerHTML=text;
 
-    box.appendChild(msg);
+box.appendChild(msg);
 
-    input.value="";
+input.value="";
 
-    box.scrollTop = box.scrollHeight;
+box.scrollTop=box.scrollHeight;
+
 }
-
 </script>
 
 </body>
