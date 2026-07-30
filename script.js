@@ -26,9 +26,9 @@ const sendBtn = document.getElementById("sendBtn");
 const chatRef = ref(db, "messages");
 
 sendBtn.onclick = () => {
-  let text = message.value.trim();
+  const text = message.value.trim();
 
-  if(text === "") return;
+  if (text === "") return;
 
   push(chatRef, {
     text: text,
@@ -39,8 +39,7 @@ sendBtn.onclick = () => {
 };
 
 onChildAdded(chatRef, (data) => {
-  let msg = document.createElement("p");
+  const msg = document.createElement("p");
   msg.innerText = data.val().text;
   chat.appendChild(msg);
 });
-console.log("Script Loaded");
