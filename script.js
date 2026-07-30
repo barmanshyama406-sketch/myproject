@@ -43,3 +43,4 @@ onChildAdded(chatRef, (data) => {
   msg.innerText = data.val().text;
   chat.appendChild(msg);
 });
+console.log("Script Loaded");
