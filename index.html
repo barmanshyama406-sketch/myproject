@@ -4,91 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Simple Chat</title>
-
-  <style>
-    body{
-      margin:0;
-      font-family:Arial,sans-serif;
-      background:#f2f2f2;
-    }
-
-    .container{
-      max-width:500px;
-      margin:30px auto;
-      background:#fff;
-      border-radius:10px;
-      padding:20px;
-      box-shadow:0 0 10px rgba(0,0,0,.15);
-    }
-
-    h2{
-      text-align:center;
-      color:#2196F3;
-    }
-
-    #chat{
-      height:350px;
-      overflow:auto;
-      border:1px solid #ddd;
-      padding:10px;
-      margin-bottom:10px;
-    }
-
-    input{
-      width:75%;
-      padding:10px;
-    }
-
-    button{
-      width:20%;
-      padding:10px;
-      background:#2196F3;
-      color:white;
-      border:none;
-    }
-
-    .msg{
-      padding:8px;
-      margin:5px 0;
-      background:#e3f2fd;
-      border-radius:8px;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="container">
-
-<h2>Simple Chat</h2>
+<h1>Simple Chat</h1>
 
 <div id="chat"></div>
 
-<input id="message" placeholder="Type message...">
+<input type="text" id="message" placeholder="Type a message">
+<button id="sendBtn">Send</button>
 
-<button onclick="sendMessage()">Send</button>
-
-</div>
-
-<script>
-
-function sendMessage(){
-
-let input=document.getElementById("message");
-
-let chat=document.getElementById("chat");
-
-if(input.value=="") return;
-
-chat.innerHTML+=`<div class="msg">${input.value}</div>`;
-
-input.value="";
-
-chat.scrollTop=chat.scrollHeight;
-
-}
-
-</script>
-
+<script type="module" src="script.js"></script>
 </body>
 </html>
