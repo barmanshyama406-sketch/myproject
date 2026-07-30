@@ -26,6 +26,7 @@ const db = getDatabase(app);
 const chat = document.getElementById("chat");
 const message = document.getElementById("message");
 const sendBtn = document.getElementById("sendBtn");
+const username = document.getElementById("username");
 
 
 const chatRef = ref(db, "messages");
@@ -34,10 +35,16 @@ const chatRef = ref(db, "messages");
 sendBtn.onclick = () => {
 
   let text = message.value.trim();
+  let name = username.value.trim();
 
   if (text === "") return;
 
+  if (name === "") {
+    name = "User";
+  }
+
   push(chatRef, {
+    name: name,
     text: text,
     time: Date.now()
   });
@@ -52,6 +59,8 @@ onChildAdded(chatRef, (data) => {
   const msg = document.createElement("div");
   msg.className = "msg";
 
+
+  const name = data.val().name;
   const text = data.val().text;
 
   const time = new Date(data.val().time).toLocaleTimeString([], {
@@ -61,6 +70,7 @@ onChildAdded(chatRef, (data) => {
 
 
   msg.innerHTML = `
+    <b>${name}</b><br>
     <span>${text}</span>
     <small>${time}</small>
   `;
