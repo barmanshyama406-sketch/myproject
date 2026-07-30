@@ -7,6 +7,12 @@ import {
   onChildAdded
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
 
+import {
+  getAuth,
+  RecaptchaVerifier,
+  signInWithPhoneNumber
+} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyDHuie3BYhnsG8XgXP_Dn3-fmqrOq0UhCA",
@@ -20,14 +26,18 @@ const firebaseConfig = {
 
 
 const app = initializeApp(firebaseConfig);
+
 const db = getDatabase(app);
 
+const auth = getAuth(app);
+
+
+// Chat
 
 const chat = document.getElementById("chat");
 const message = document.getElementById("message");
 const sendBtn = document.getElementById("sendBtn");
 const username = document.getElementById("username");
-
 
 const chatRef = ref(db, "messages");
 
@@ -37,49 +47,110 @@ sendBtn.onclick = () => {
   let text = message.value.trim();
   let name = username.value.trim();
 
-  if (text === "") return;
+  if(text === "") return;
 
-  if (name === "") {
+  if(name === ""){
     name = "User";
   }
 
-  push(chatRef, {
-    name: name,
-    text: text,
-    time: Date.now()
+
+  push(chatRef,{
+    name:name,
+    text:text,
+    time:Date.now()
   });
 
-  message.value = "";
+
+  message.value="";
 
 };
 
 
-onChildAdded(chatRef, (data) => {
 
-  const msg = document.createElement("div");
-  msg.className = "msg";
+onChildAdded(chatRef,(data)=>{
 
-
-  const name = data.val().name;
-  const text = data.val().text;
-
-  const time = new Date(data.val().time).toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit"
-  });
+  const msg=document.createElement("div");
+  msg.className="msg";
 
 
-  msg.innerHTML = `
-    <b>${name}</b><br>
-    <span>${text}</span>
-    <small>${time}</small>
+  const name=data.val().name || "User";
+  const text=data.val().text;
+
+
+  msg.innerHTML=`
+  <b>${name}</b><br>
+  ${text}
   `;
 
 
   chat.appendChild(msg);
-  chat.scrollTop = chat.scrollHeight;
 
 });
 
 
-console.log("Chat Ready");
+
+// Phone Login
+
+const phone = document.getElementById("phone");
+const sendOtp = document.getElementById("sendOtp");
+const otp = document.getElementById("otp");
+const verifyOtp = document.getElementById("verifyOtp");
+
+
+window.recaptchaVerifier = new RecaptchaVerifier(
+  "sendOtp",
+  {
+    size:"invisible"
+  },
+  auth
+);
+
+
+
+let confirmationResult;
+
+
+sendOtp.onclick = () => {
+
+  let number = phone.value;
+
+
+  signInWithPhoneNumber(
+    auth,
+    number,
+    window.recaptchaVerifier
+  )
+  .then((result)=>{
+
+    confirmationResult=result;
+
+    alert("OTP Sent");
+
+  })
+  .catch((error)=>{
+
+    alert(error.message);
+
+  });
+
+};
+
+
+
+verifyOtp.onclick = ()=>{
+
+  confirmationResult.confirm(
+    otp.value
+  )
+  .then(()=>{
+
+    alert("Login Successful");
+
+  })
+  .catch(()=>{
+
+    alert("Wrong OTP");
+
+  });
+
+};
