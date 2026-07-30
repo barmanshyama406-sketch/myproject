@@ -1,10 +1,12 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+
 import {
   getDatabase,
   ref,
   push,
   onChildAdded
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyDHuie3BYhnsG8XgXP_Dn3-fmqrOq0UhCA",
@@ -16,17 +18,22 @@ const firebaseConfig = {
   appId: "1:110265526293:web:bd5796795b1beb1c32061c"
 };
 
+
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+
 
 const chat = document.getElementById("chat");
 const message = document.getElementById("message");
 const sendBtn = document.getElementById("sendBtn");
 
+
 const chatRef = ref(db, "messages");
 
+
 sendBtn.onclick = () => {
-  const text = message.value.trim();
+
+  let text = message.value.trim();
 
   if (text === "") return;
 
@@ -36,10 +43,33 @@ sendBtn.onclick = () => {
   });
 
   message.value = "";
+
 };
 
+
 onChildAdded(chatRef, (data) => {
-  const msg = document.createElement("p");
-  msg.innerText = data.val().text;
+
+  const msg = document.createElement("div");
+  msg.className = "msg";
+
+  const text = data.val().text;
+
+  const time = new Date(data.val().time).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+
+
+  msg.innerHTML = `
+    <span>${text}</span>
+    <small>${time}</small>
+  `;
+
+
   chat.appendChild(msg);
+  chat.scrollTop = chat.scrollHeight;
+
 });
+
+
+console.log("Chat Ready");
