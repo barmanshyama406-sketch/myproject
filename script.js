@@ -32,79 +32,22 @@ const db = getDatabase(app);
 const auth = getAuth(app);
 
 
-// Chat
-
-const chat = document.getElementById("chat");
-const message = document.getElementById("message");
-const sendBtn = document.getElementById("sendBtn");
-const username = document.getElementById("username");
-
-const chatRef = ref(db, "messages");
-
-
-sendBtn.onclick = () => {
-
-  let text = message.value.trim();
-  let name = username.value.trim();
-
-  if(text === "") return;
-
-  if(name === ""){
-    name = "User";
-  }
-
-
-  push(chatRef,{
-    name:name,
-    text:text,
-    time:Date.now()
-  });
-
-
-  message.value="";
-
-};
-
-
-
-onChildAdded(chatRef,(data)=>{
-
-  const msg=document.createElement("div");
-  msg.className="msg";
-
-
-  const name=data.val().name || "User";
-  const text=data.val().text;
-
-
-  msg.innerHTML=`
-  <b>${name}</b><br>
-  ${text}
-  `;
-
-
-  chat.appendChild(msg);
-
-});
-
-
-
-// Phone Login
+// LOGIN
 
 const phone = document.getElementById("phone");
-const sendOtp = document.getElementById("sendOtp");
 const otp = document.getElementById("otp");
+
+const sendOtp = document.getElementById("sendOtp");
 const verifyOtp = document.getElementById("verifyOtp");
 
 
 window.recaptchaVerifier = new RecaptchaVerifier(
-  "sendOtp",
+  "recaptcha-container",
   {
-    size:"invisible"
+    size: "invisible"
   },
   auth
 );
-
 
 
 let confirmationResult;
@@ -112,7 +55,12 @@ let confirmationResult;
 
 sendOtp.onclick = () => {
 
-  let number = phone.value;
+  let number = phone.value.trim();
+
+  if(number === ""){
+    alert("Enter phone number");
+    return;
+  }
 
 
   signInWithPhoneNumber(
@@ -122,7 +70,7 @@ sendOtp.onclick = () => {
   )
   .then((result)=>{
 
-    confirmationResult=result;
+    confirmationResult = result;
 
     alert("OTP Sent");
 
@@ -137,16 +85,22 @@ sendOtp.onclick = () => {
 
 
 
-verifyOtp.onclick = ()=>{
+verifyOtp.onclick = () => {
 
-  confirmationResult.confirm(
-    otp.value
-  )
+  confirmationResult.confirm(otp.value)
+
   .then(()=>{
 
     alert("Login Successful");
 
+
+    document.getElementById("loginBox").style.display="none";
+
+    document.getElementById("chatBox").style.display="block";
+
+
   })
+
   .catch(()=>{
 
     alert("Wrong OTP");
@@ -154,3 +108,85 @@ verifyOtp.onclick = ()=>{
   });
 
 };
+
+
+
+// CHAT
+
+
+const chat = document.getElementById("chat");
+
+const message = document.getElementById("message");
+
+const sendBtn = document.getElementById("sendBtn");
+
+const username = document.getElementById("username");
+
+
+const chatRef = ref(db,"messages");
+
+
+
+sendBtn.onclick = () => {
+
+
+  let text = message.value.trim();
+
+  let name = username.value.trim();
+
+
+  if(text === "") return;
+
+
+  if(name === ""){
+    name = "User";
+  }
+
+
+  push(chatRef,{
+
+    name:name,
+
+    text:text,
+
+    time:Date.now()
+
+  });
+
+
+  message.value="";
+
+
+};
+
+
+
+onChildAdded(chatRef,(data)=>{
+
+
+  const msg = document.createElement("div");
+
+  msg.className="msg";
+
+
+  const name = data.val().name || "User";
+
+  const text = data.val().text;
+
+
+  msg.innerHTML = `
+
+  <b>${name}</b><br>
+
+  <span>${text}</span>
+
+  `;
+
+
+  chat.appendChild(msg);
+
+
+  chat.scrollTop = chat.scrollHeight;
+
+
+});
