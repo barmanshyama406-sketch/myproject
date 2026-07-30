@@ -19,4 +19,27 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-console.log("Firebase Connected");
+const chat = document.getElementById("chat");
+const message = document.getElementById("message");
+const sendBtn = document.getElementById("sendBtn");
+
+const chatRef = ref(db, "messages");
+
+sendBtn.onclick = () => {
+  let text = message.value.trim();
+
+  if(text === "") return;
+
+  push(chatRef, {
+    text: text,
+    time: Date.now()
+  });
+
+  message.value = "";
+};
+
+onChildAdded(chatRef, (data) => {
+  let msg = document.createElement("p");
+  msg.innerText = data.val().text;
+  chat.appendChild(msg);
+});
